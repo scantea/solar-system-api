@@ -31,10 +31,17 @@ def handle_planets():
 
 @planet_bp.route("/<planet_id>", methods=["GET"])
 def handle_planet(planet_id):
-    planet = Planet.query.get(planet_id)
+    try:
+      
+        planet = Planet.query.get(planet_id)
 
-    return {
-        "id":planet.id,
-        "name": planet.name,
-        "description": planet.description
-    }
+        return {
+            "id":planet.id,
+            "name": planet.name,
+            "description": planet.description
+        }
+    except:
+        return {
+            "error":True,
+            "description": "Error, planet ID not found"
+        },404
