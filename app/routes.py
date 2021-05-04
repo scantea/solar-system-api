@@ -10,15 +10,28 @@ planet_bp = Blueprint("planet", __name__, url_prefix="/planets")
 @planet_bp.route("", methods=["GET", "POST"])
 def handle_planets():
     if request.method == "GET":
-        planets = Planet.query.all()
-        planets_response = []
+        name_query=request.args.get("name")
+        if name_query:
+            planets = Planet.query.filter_by(name=name_query)
+        else:
+            planets = Planet.query.all()
+        planets_response=[]
         for planet in planets:
             planets_response.append({
                 "id": planet.id,
                 "name": planet.name,
                 "description": planet.description
-            })
+            }) 
         return jsonify(planets_response)
+        # planets = Planet.query.all()
+        # planets_response = []
+        # for planet in planets:
+        #     planets_response.append({
+        #         "id": planet.id,
+        #         "name": planet.name,
+        #         "description": planet.description
+        #     })
+        # return jsonify(planets_response)
     elif request.method == "POST":
         request_body = request.get_json()
         new_planet = Planet(name=request_body["name"],
